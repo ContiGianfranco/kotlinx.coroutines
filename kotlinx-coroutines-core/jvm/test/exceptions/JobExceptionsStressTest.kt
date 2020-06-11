@@ -20,6 +20,27 @@ class JobExceptionsStressTest : TestBase() {
     }
 
     @Test
+    fun easyExceptionTest() {
+        //System.setProperty("kotlinx.atomicfu.trace.thread", "T")
+        repeat(10000 * stressTestMultiplier) {
+            val handler = CapturingHandler()
+            runBlocking(executor + handler) {
+                val barrier = CyclicBarrier(2)
+                val job = launch(NonCancellable) {
+                    launch(start = CoroutineStart.ATOMIC) {
+                        barrier.await()
+                        throw TestException1()
+                    }
+                    delay(1000)
+                }
+                barrier.await()
+                job.join()
+            }
+            println(handler.getException())
+        }
+    }
+
+    @Test
     fun testMultipleChildrenThrows() {
         /*
          * Root parent: launched job
