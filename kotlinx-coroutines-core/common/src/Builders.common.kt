@@ -181,7 +181,7 @@ public suspend inline operator fun <T> CoroutineDispatcher.invoke(
 
 // --------------- implementation ---------------
 
-private open class StandaloneCoroutine(
+public open class StandaloneCoroutine(
     parentContext: CoroutineContext,
     active: Boolean
 ) : AbstractCoroutine<Unit>(parentContext, active) {

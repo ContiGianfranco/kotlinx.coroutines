@@ -5,9 +5,11 @@
 package kotlinx.coroutines.exceptions
 
 import kotlinx.coroutines.*
+import org.jetbrains.kotlinx.lincheck.verifier.*
 import org.junit.*
 import org.junit.Test
 import java.util.concurrent.*
+import kotlin.coroutines.*
 import kotlin.test.*
 
 class JobExceptionsStressTest : TestBase() {
@@ -23,6 +25,7 @@ class JobExceptionsStressTest : TestBase() {
     fun easyExceptionTest() {
         //System.setProperty("kotlinx.atomicfu.trace.thread", "T")
         repeat(10000 * stressTestMultiplier) {
+            println(" == Iteration $it == ")
             val handler = CapturingHandler()
             runBlocking(executor + handler) {
                 val barrier = CyclicBarrier(2)
@@ -48,6 +51,7 @@ class JobExceptionsStressTest : TestBase() {
          * Result: one of the exceptions with the rest two as suppressed
          */
         repeat(1000 * stressTestMultiplier) {
+            println(" == Iteration $it == ")
             val exception = captureExceptionsRun(executor) {
                 val barrier = CyclicBarrier(4)
                 val job = launch(NonCancellable) {
